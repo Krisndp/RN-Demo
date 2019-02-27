@@ -1,37 +1,47 @@
 import React from 'react';
-import { Text, View, Dimensions, ScrollView, FlatList } from 'react-native';
-const { width, height } = Dimensions.get('window');
-import CategoryListItems from './component/CategoryListItems';
+import { View, Text, Button } from 'react-native';
+import { createAppContainer, createStackNavigator, StackActions, NavigationActions } from 'react-navigation'; // Version can be specified in package.json
 
-export default class App extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      categories:[
-        {id:1, name:'Do choi'},
-        {id:2, name:'Do choi 1'},
-        {id:3, name:'Do choi 2'},
-        {id:4, name:'Do choi 3'},
-        {id:5, name:'Do choi 4'},
-
-      ]
-    };
-  }
-
+class HomeScreen extends React.Component {
   render() {
-    const {categories} = this.state;
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {/* <ScrollView>
-          {categories.map(category => <CategoryListItems key={category.id} category={category} />)}
-        </ScrollView> */}
-        <FlatList
-          data={categories}
-          renderItem={({item})=> <CategoryListItems category={item}/>}
-          keyExtractor={item => `${item.id}`}
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Home Screen</Text>
+        <Button
+          title="Go to Details"
+          onPress={() => {
+            this.props.navigation.dispatch(StackActions.reset({
+              index: 0,
+              actions: [
+                NavigationActions.navigate({ routeName: 'Details' })
+              ],
+            }))
+          }}
         />
       </View>
     );
-  }
+  }  
 }
 
+class DetailsScreen extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Details Screen</Text>
+      </View>
+    );
+  }  
+}
+
+const AppNavigator = createStackNavigator({
+  Home: {
+    screen: HomeScreen,
+  },
+  Details: {
+    screen: DetailsScreen,
+  },
+}, {
+    initialRouteName: 'Home',
+});
+
+export default createAppContainer(AppNavigator);
